@@ -42,21 +42,21 @@ router.post('/', async (req,res) => {
 // query for batch id + user id from the currently authetnicated user
 // if if a result is returned, then the currently authenticated user is the batch owner
 // if the result is empty, the batch might exist, but the user doesn't own it
-router.put('/:id', (req,res) => {
-    if(req.isAuthenticated()){
-        console.log('req.user:', req.user);
-        // if batch id = user id then return result
-      try {
-          let insertUpdateBatch =    ``;
-        await pool.query(insertUpdateBatch, []);
-        res.sendStatus(201);
-    } catch (error) {
-            console.log("Error in server side PUT", error);
-            res.sendStatus(404)
-    }    
-} else{
-    res.sendStatus(403)
-}
-)}} ;
+// router.put('/:id', (req,res) => {
+//     if(req.isAuthenticated()){
+//         console.log('req.user:', req.user);
+//         // if batch id = user id then return result
+//       try {
+//           let insertUpdateBatch =    ``;
+//         await pool.query(insertUpdateBatch, []);
+//         res.sendStatus(201);
+//     } catch (error) {
+//             console.log("Error in server side PUT", error);
+//             res.sendStatus(404)
+//     }    
+// } else{
+//     res.sendStatus(403)
+// }
+// )}} ;
 
 module.exports = router;
