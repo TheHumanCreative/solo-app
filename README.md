@@ -1,68 +1,90 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# REACT AUTH SHELF
 
-## Available Scripts
+Our client, Prime Digital Academy: Room 2, has asked for an app to simulate the behavior of their shelf. That is, a list of items placed on the classroom shelf. More details about each of the features are listed below in the README.md.
 
-In the project directory, you can run:
+## DOWNLOAD THIS REPOSITORY
 
-### `npm start`
+> NOTE: Do not clone this repository.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* Don't Fork or Clone. Instead, have one memeber of your group click the `Clone or Download` button and select `Download Zip`.
+* Unzip the project and start with the code in that folder.
+* Create a new GitHub project and push this code to the new repository.
+* Add members of your group to the repository.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## CREATE DATABASE AND TABLE
 
-### `npm test`
+Create a new database called `auth_shelf` and create a `user` table:
+ user-update
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```SQL
+CREATE TABLE "user" (
+    "id" SERIAL PRIMARY KEY,
+    "username" VARCHAR (80) UNIQUE NOT NULL,
+    "password" VARCHAR (1000) NOT NULL
+);
 
-### `npm run build`
+CREATE TABLE "item" (
+    "id" SERIAL PRIMARY KEY,
+    "description" VARCHAR (80) NOT NULL,
+    "image_url" VARCHAR (2083),
+    "user_id" INT REFERENCES "user"
+);
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## DEVELOPMENT SETUP
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+* Clone the repository for your group
+* Run `npm install`
+* Create a `.env` file at the root of the project and paste this line into the file:
+    ```
+    SERVER_SESSION_SECRET=superDuperSecret
+    ```
+    While you're in your new `.env` file, take the time to replace `superDuperSecret` with some long random string like `25POUbVtx6RKVNWszd9ERB9Bb6` to keep your application secure. Here's a site that can help you: [https://passwordsgenerator.net/](https://passwordsgenerator.net/). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
+* Start postgres if not running already by using `brew services start postgresql`
+* Run `npm run server`
+* Run `npm run client`
+* Navigate to `localhost:3000`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Testing Routes with Postman
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+To use Postman with this repo, you will need to set up requests in Postman to register a user and login a user at a minimum. 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Keep in mind that once you using the login route, Postman will manage your session cookie for you just like a browser, ensuring it is sent with each subsequent request. If you delete the `localhost` cookie in Postman, it will effectively log you out.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Start the server - `npm run server`
+2. [Import the sample routes JSON file](./PostmanPrimeSoloRoutes.json) by clicking `Import` in Postman. Select the file.
+3. Click `Collections` and `Send` the following three calls in order:
+    1. `POST /api/user/register` registers a new user, see body to change username/password
+    2. `POST /api/user/login` will login a user, see body to change username/password
+    3. `GET /api/user` will get user information, by default it's not very much
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+After running the login route above, you will be able to try any other route you create that requires a logged in user!
 
-## Learn More
+## FEATURES
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+We recommend working in groups of 4 or 6 and pair programming for this project. Each pair should take on one of the following features. You will want to identify any tasks that need to be finished in a particular order as a group to avoid merge conflicts. Each of the following features should be on a separate route.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Display all Items
 
-### Code Splitting
+The shelf (info) page should show all of the items stored in the database in a list or table.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+### Add Items to the Shelf
 
-### Analyzing the Bundle Size
+The Shelf (Info) Page should allow a user to add a new item to the database (which should immediately appear in the list).
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+> NOTE: Image url should be a full path to an existing image on the web. You should not attempt to implement image upload for this.
 
-### Making a Progressive Web App
+### Delete Items from the Shelf
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+An authenticated user should be able to delete items from the shelf if they were the one who added the item to the shelf.
 
-### Advanced Configuration
+> NOTE: This should require client and server changes. An unauthenticated attacker from Postman should not be able to delete anything.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+## Stretch Goals
 
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- Ability to edit an existing item on the shelf from the info page.
+- Have anyone, not just logged in users, be able to see what is on the shelf, but not edit, remove, nor add.
+- A new route to display all items for a specific user. `/shelf/2` would display items uploaded by user with the id of `2`.
+- Filestack for image upload on the add page.
+- Style with Material-UI
