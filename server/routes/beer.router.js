@@ -45,7 +45,7 @@ router.delete('/:id', (req, res) => {
     console.log(req.body, req.user);
     
     if(req.isAuthenticated()){
-            let queryText = `DELETE FROM "beer" WHERE "user_id" = $1 AND "id" = $2`
+            let queryText = `DELETE FROM "beer" WHERE "user_id" = $1 AND "id" = $2;`;
             pool.query(queryText, [req.user.id, req.params.id])
             .then(results => res.sendStatus(201))
             .catch(error => {
